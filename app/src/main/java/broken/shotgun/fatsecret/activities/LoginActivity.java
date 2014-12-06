@@ -1,4 +1,4 @@
-package broken.shotgun.fatsecret;
+package broken.shotgun.fatsecret.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -22,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import broken.shotgun.fatsecret.R;
+import broken.shotgun.fatsecret.utils.FatSecretUtils;
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -43,8 +45,8 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        prefs = getSharedPreferences("FatSecret", MODE_PRIVATE);
-        String accessToken = prefs.getString("oauth_access_token", ACCESS_TOKEN_MISSING);
+        prefs = getSharedPreferences(FatSecretUtils.PREFERENCES_FILE, MODE_PRIVATE);
+        String accessToken = prefs.getString(FatSecretUtils.OAUTH_ACCESS_TOKEN_KEY, ACCESS_TOKEN_MISSING);
 
         if(!accessToken.equals(ACCESS_TOKEN_MISSING)) {
             Intent home = new Intent(this, HomeActivity.class);
@@ -153,8 +155,8 @@ public class LoginActivity extends ActionBarActivity {
                                                     String token = accessTokenResponseParams.getFirst(OAuth.OAUTH_TOKEN);
                                                     String secret = accessTokenResponseParams.getFirst(OAuth.OAUTH_TOKEN_SECRET);
                                                     prefs.edit()
-                                                            .putString("oauth_access_token", token)
-                                                            .putString("oauth_access_secret", secret)
+                                                            .putString(FatSecretUtils.OAUTH_ACCESS_TOKEN_KEY, token)
+                                                            .putString(FatSecretUtils.OAUTH_ACCESS_SECRET_KEY, secret)
                                                             .apply();
 
                                                     Intent home = new Intent(LoginActivity.this, HomeActivity.class);
