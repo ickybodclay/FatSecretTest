@@ -96,7 +96,7 @@ public class LoginActivity extends ActionBarActivity {
             HttpURLConnection requestTokenUrlConnection = (HttpURLConnection) new URL(signedRequestTokenRequestUrl).openConnection();
             HttpParameters requestTokenResponseParams = OAuth.decodeForm(requestTokenUrlConnection.getInputStream());
             final String requestToken = requestTokenResponseParams.getFirst(OAuth.OAUTH_TOKEN);
-            String requestSecret = requestTokenResponseParams.getFirst(OAuth.OAUTH_TOKEN_SECRET);
+            final String requestSecret = requestTokenResponseParams.getFirst(OAuth.OAUTH_TOKEN_SECRET);
             Log.d(TAG, "Request token = " + requestToken);
             Log.d(TAG, "Token secret = " + requestSecret);
 
@@ -142,6 +142,7 @@ public class LoginActivity extends ActionBarActivity {
                                                 authTokenRequestParams.put("oauth_token", requestToken);
                                                 authTokenRequestParams.put("oauth_verifier", verifyCode);
                                                 consumer.setAdditionalParameters(authTokenRequestParams);
+                                                consumer.setTokenWithSecret(requestToken, requestSecret);
 
                                                 try {
                                                     String signedAccessTokenUrl = consumer.sign("http://www.fatsecret.com/oauth/access_token");
@@ -182,7 +183,7 @@ public class LoginActivity extends ActionBarActivity {
                                         }).start();
                                     }
                                 });
-                            } else if(url.contains("error")) {
+                            } else if (url.contains("error")) {
                                 Log.i(TAG, "authorize error");
                                 Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_SHORT).show();
                                 runOnUiThread(new Runnable() {
